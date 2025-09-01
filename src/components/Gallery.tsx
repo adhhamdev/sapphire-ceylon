@@ -1,59 +1,41 @@
 import React, { useState } from 'react';
-import { X, Loader2 } from 'lucide-react';
-import { useGems } from '../hooks/useGems';
-import { Gem } from '../types/gem';
+import { X } from 'lucide-react';
 
 const Gallery = () => {
-  const { gems, loading, error } = useGems();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const getImageUrl = (gem: Gem): string => {
-    if (gem.image?.sizes?.card?.url) {
-      return `http://localhost:3001${gem.image.sizes.card.url}`;
+  const galleryImages = [
+    {
+      src: 'https://images.pexels.com/photos/1721935/pexels-photo-1721935.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+      alt: 'Blue Ceylon Sapphire',
+      title: '15.2ct Royal Blue Sapphire'
+    },
+    {
+      src: 'https://images.pexels.com/photos/1454671/pexels-photo-1454671.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+      alt: 'Pink Ceylon Sapphire',
+      title: '8.7ct Padparadscha Sapphire'
+    },
+    {
+      src: 'https://images.pexels.com/photos/1721946/pexels-photo-1721946.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+      alt: 'Yellow Ceylon Sapphire',
+      title: '12.1ct Yellow Sapphire'
+    },
+    {
+      src: 'https://images.pexels.com/photos/1454674/pexels-photo-1454674.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+      alt: 'Pink Sapphire Ring',
+      title: 'Custom Pink Sapphire Ring'
+    },
+    {
+      src: 'https://images.pexels.com/photos/1454672/pexels-photo-1454672.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+      alt: 'White Ceylon Sapphire',
+      title: '10.5ct White Sapphire'
+    },
+    {
+      src: 'https://images.pexels.com/photos/1454673/pexels-photo-1454673.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop',
+      alt: 'Star Sapphire',
+      title: 'Rare Star Sapphire'
     }
-    if (gem.image?.url) {
-      return `http://localhost:3001${gem.image.url}`;
-    }
-    return 'https://images.pexels.com/photos/1721935/pexels-photo-1721935.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&fit=crop';
-  };
-
-  const getHighResImageUrl = (gem: Gem): string => {
-    if (gem.image?.sizes?.hero?.url) {
-      return `http://localhost:3001${gem.image.sizes.hero.url}`;
-    }
-    if (gem.image?.url) {
-      return `http://localhost:3001${gem.image.url}`;
-    }
-    return getImageUrl(gem);
-  };
-
-  if (loading) {
-    return (
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center h-64">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-700" />
-            <span className="ml-2 text-slate-600">Loading gallery...</span>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  if (error) {
-    return (
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <p className="text-red-600">Error loading gallery: {error}</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  // Take first 6 gems for gallery display
-  const galleryGems = gems.slice(0, 6);
+  ];
 
   return (
     <section className="py-24 bg-white">
@@ -68,49 +50,35 @@ const Gallery = () => {
           </p>
         </div>
 
-        {galleryGems.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-slate-600">No gems available in the gallery at the moment.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {galleryGems.map((gem) => (
-              <div 
-                key={gem.id}
-                className="group relative bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2"
-                onClick={() => setSelectedImage(getHighResImageUrl(gem))}
-              >
-                <div className="relative h-64 sm:h-72 overflow-hidden">
-                  <img 
-                    src={getImageUrl(gem)}
-                    alt={gem.image?.alt || gem.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg">
-                      <span className="text-slate-800 font-semibold">View Details</span>
-                    </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {galleryImages.map((image, index) => (
+            <div 
+              key={index}
+              className="group relative bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2"
+              onClick={() => setSelectedImage(image.src)}
+            >
+              <div className="relative h-64 sm:h-72 overflow-hidden">
+                <img 
+                  src={image.src}
+                  alt={image.alt}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg">
+                    <span className="text-slate-800 font-semibold">View Details</span>
                   </div>
-                  {gem.featured && (
-                    <div className="absolute top-4 right-4 bg-amber-500 text-white px-2 py-1 rounded text-xs font-semibold">
-                      Featured
-                    </div>
-                  )}
-                </div>
-                
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-slate-800 text-center mb-2">
-                    {gem.name}
-                  </h3>
-                  {gem.weight && (
-                    <p className="text-sm text-slate-500 text-center">{gem.weight} carats</p>
-                  )}
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+              
+              <div className="p-6">
+                <h3 className="text-lg font-semibold text-slate-800 text-center">
+                  {image.title}
+                </h3>
+              </div>
+            </div>
+          ))}
+        </div>
 
         {/* Modal */}
         {selectedImage && (
